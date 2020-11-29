@@ -22,7 +22,7 @@ opt.add_experimental_option("prefs", {
 })
 
 meetLink = 'https://meet.google.com/'
-username = "abhilashmnair20"
+username = "18b211@nssce.ac.in"
 password = "Abhilash@2000"
 
 today = datetime.datetime.now().strftime("%A")
@@ -69,6 +69,7 @@ def openMeeting(link,end_time):
         time.sleep(5)
         current = datetime.datetime.now()
         current_time=current.strftime("%H:%M")
+    driver.quit()
 
 def joinClass() :
     conn_tt = sqlite3.connect('timetable.db')
@@ -76,26 +77,27 @@ def joinClass() :
     conn_l = sqlite3.connect('links.db')
     c_l = conn_l.cursor()
     for row in c_tt.execute("SELECT * FROM timetable where day = '%s'"%(today.lower())):
-        sub = row[1]
+        sub = row[1].lower()
         start_time = row[2]
         end_time = row[3]
         current = datetime.datetime.now()
         current_time=current.strftime("%H:%M")
-        if(start_time < current_time):
-            print("Oops...Your're late for ",sub," class. Waiting for next class...")
-            continue
-        while(str(start_time) != str(current_time)):
-            time.sleep(5)
-            current = datetime.datetime.now()
-            current_time=current.strftime("%H:%M")
-            try:
-                for row in c_l.execute("SELECT links FROM links WHERE subject='%s'"%(sub)):
-                    link = row[0]
+        try:
+            for row in c_l.execute("SELECT links FROM links WHERE subject='%s'"%(sub)):
+                link = row[0]
+            if(start_time < current_time and end_time > current_time):
+                print("Oops...Your're late for ",sub," class.")
+                openMeeting(link,end_time)
+            else:
+                while(str(start_time) != str(current_time)):
+                    time.sleep(5)
+                    current = datetime.datetime.now()
+                    current_time=current.strftime("%H:%M")
                 print('Joining.\nSubject : ',sub)
                 openMeeting(link,end_time)
-                print(sub,' class over.')
-            except:
-                print('Class link not found!')
+        except:
+            print('Class link not found!')
+        print(sub,' class over.')
     print("Today's classes are over!")
 
 choice = startScreen()
