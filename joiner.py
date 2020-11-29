@@ -22,8 +22,8 @@ opt.add_experimental_option("prefs", {
 })
 
 meetLink = 'https://meet.google.com/'
-username = "18b211@nssce.ac.in"
-password = "Abhilash@2000"
+username = "YOUR_USERNAME"
+password = "YOUR_PASSWORD"
 
 today = datetime.datetime.now().strftime("%A")
 
